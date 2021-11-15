@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+nav {
+  width: 100vw;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.pagination {
+  display: flex;
+  width: min-content;
+  height: 30px;
+}
+.pagination li {
+  margin: 0 10px;
+  cursor: pointer;
+}
