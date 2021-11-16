@@ -5,19 +5,26 @@ const Dog = require('./models/Dog')
 const Breed = require('./models/Breed')
 const app = express()
 const port = 5000
-const url = "https://dog.ceo/api/breeds/image/random";
+const url = "https://dog.ceo/api/breeds/image/random"
 let dogs = []
 let breeds = []
-
 const addBreed = async (arr, data) => {
   const title = arr[4]
   let writeResult = null
-  const isАdded = await Breed.findOne({title})
-  if (isАdded) writeResult = isАdded._id
-  else {
-    const breed = new Breed({title})
-    writeResult = await breed.save()
+  let sessionEl = breeds.find(o => o.title == title)
+  if (sessionEl === undefined) {
+    const isАdded = await Breed.findOne({title: title})
+    if (isАdded) writeResult = isАdded._id
+    else {
+      const breed = new Breed({title})
+      writeResult = await breed.save()
+    }
+    breeds.push({title: title, _id: writeResult._id})
   }
+  else {
+    return writeResult = sessionEl._id
+  }
+  console.log(dogs.length) 
   addDog(arr, data, writeResult._id)
 }
 const addDog = async (arr, data, id) => {
@@ -46,6 +53,7 @@ const setDogs = () => {
           i == 99 ? resolve(data) : null 
         })
       }).on('error', err => {
+        reject(err)
         console.error(err)
       })
     }
@@ -65,10 +73,14 @@ app.get('/getels', async (req, res) => {
   }
 })
 app.get('/dogs', async (req, res) => {
-  dogs = await Dog.find({})
-  // breeds = await Breed.find({})
-  // console.log(array)
-  res.json(dogs)
+  try {
+    dogs = await Dog.find({})
+    breeds = await Breed.find({})
+    res.json([dogs,breeds])
+  }
+  catch(err) {
+    res.send(err.message)
+  }
 })
 const start = async () => {
   try {

@@ -5,6 +5,7 @@ function App() {
   const [error, setError] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [dogs, setDogs] = useState([])
+  const [breeds, setBreeds] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const [search, setSearch] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
@@ -14,7 +15,9 @@ function App() {
       .then(
         (result) => {
           setIsLoaded(true)
-          setDogs(result)
+          setDogs(result[0])
+          console.log(result)
+          setBreeds(result[1])
         },
         (error) => {
           setIsLoaded(true)
@@ -22,18 +25,20 @@ function App() {
         }
       )
   }, [])
-
+  useEffect(() => {
+    console.log(renderPageNumbers)
+  })
   const searchedDogs = useMemo(() => {
     if (search.trim() === '' && selectedOption.trim() === '') return dogs
     else if (search.trim() !== '' || selectedOption.length > 0) {
+      setCurrentPage(0)
       return dogs.filter(d => d.breed.includes(selectedOption.trim()) && d.title.includes(search.trim()))
     }
     else return [{title:'нет элементов'}]
   }, [search, dogs, selectedOption])
-  const pageNumbers = [];
+  const pageNumbers = []
   for (let i = 0; i <= Math.ceil(searchedDogs.length / 10)-1; i++) {
-    pageNumbers.push(i);
-    
+    pageNumbers.push(i)
   }
   function handleClick(event) {
       setCurrentPage(event.target.id)
@@ -67,8 +72,8 @@ function App() {
           </input>
           <select value={selectedOption} onChange={e => setSelectedOption(e.target.value)}>
             <option value="">all breeds</option>
-            {dogs.map(d => (
-              <option key={d.id} value={d.breed}>{d.breed}</option>
+            {breeds.map(d => (
+              <option key={d._id} value={d._id}>{d.title}</option>
             ))}
           </select>
         </nav>
@@ -90,7 +95,7 @@ function App() {
         </table>
         <div className="pagination">{renderPageNumbers}</div>
       </>
-    );
+    )
   }
 }
 

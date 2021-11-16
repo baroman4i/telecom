@@ -3,16 +3,23 @@
   padding: 0;
   outline: none;
 }
+.App {
+  margin: 0 10vw;
+}
 nav {
   width: 100vw;
-  height: 50px;
+  height: 40px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+}
+table {
+  margin: 0 auto;
 }
 .pagination {
   display: flex;
   width: min-content;
+  margin: auto;
   height: 30px;
 }
 .pagination li {
